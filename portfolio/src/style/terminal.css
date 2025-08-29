@@ -1,0 +1,66 @@
+/* Conteneur global du terminal */
+.terminal-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  overflow: hidden;
+  margin-left: 10px;
+  /* align-items: flex-start; */
+}
+.menu-wrapper {
+  align-items: flex-start;
+}
+
+/* Menu */
+.terminal-menu {
+  margin-top: 10px;
+  margin-bottom: 20px;
+  color: #8A2BE2;
+  border-bottom: 1px solid #8A2BE2;
+  padding: 5px 0px;
+  font-size: 1.2rem;
+  user-select: none;
+
+  display: inline-block; /* ✅ largeur = contenu */
+  padding: 5px 0; 
+}
+
+
+.terminal-menu span {
+  cursor: text;
+}
+
+/* Conteneur xterm */
+/* Scrollbar moderne pour le terminal */
+.terminal-container {
+  flex-grow: 1;
+  overflow: auto; /* ✅ important pour activer le scroll */
+  color: #E0E0E0;
+  /* min-height: 400px;
+  min-width: 600px; */
+  
+  /* Pour Firefox */
+  scrollbar-width:thin; /* réduit la largeur */
+  scrollbar-color: #8A2BE2 transparent; /* thumb violet, track foncé */
+}
+
+/* Chrome, Edge, Safari */
+.terminal-container::-webkit-scrollbar {
+  width: 8px; /* largeur verticale */
+  height: 8px; /* largeur horizontale */
+}
+
+.terminal-container::-webkit-scrollbar-track {
+  background: #1a1a1a; /* fond foncé */
+  border-radius: 10px;
+}
+
+.terminal-container::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #8A2BE2, #6a1bb0);
+  border-radius: 10px;
+  transition: background 0.3s ease;
+}
+
+.terminal-container::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #a24bf3, #8A2BE2);
+}

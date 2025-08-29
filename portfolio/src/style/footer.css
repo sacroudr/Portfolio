@@ -1,0 +1,12 @@
+/* TerminalFooter.css */
+.terminal-footer {
+  background-color: #111;
+  padding: 10px 20px;
+  font-size: 14px;
+  border-top: 1px solid #8A2BE2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+  color: #8A2BE2;
+}

@@ -1,0 +1,27 @@
+ /* Page du terminal */
+.terminal-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #000000; /* Fond noir */
+  color: #E0E0E0; /* Texte normal gris clair */
+  font-family: monospace;
+}
+
+/* Main (profil + terminal) */
+.terminal-main {
+  display: flex;
+  flex-grow: 1;
+  /* overflow: hidden; */
+}
+
+/* Partie droite terminal */
+.terminal-right {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  overflow: hidden;
+  margin-left: 10px;
+}
+
+
