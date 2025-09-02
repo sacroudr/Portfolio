@@ -69,4 +69,4 @@ Some example commands available in the terminal:
 
 ## 👤 Author
 
-- **SACROUD Riad** – [www.linkedin.com/in/riad-sacroud-7a5b73166](#) | [https://github.com/sacroudr](#)  
+- **SACROUD Riad** – [LinkedIn](https://www.linkedin.com/in/riad-sacroud-7a5b73166) | [GitHub](https://github.com/sacroudr)  
