@@ -37,7 +37,7 @@ Portfolio-main/
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/sacroudr/terminal-portfolio.git
+   git clone https://github.com/sacroudr/Portfolio.git
    cd portfolio
    ```
 
