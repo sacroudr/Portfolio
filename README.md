@@ -39,6 +39,7 @@ Portfolio-main/
    ```bash
    git clone https://github.com/sacroudr/Portfolio.git
    cd portfolio
+   cd myportfolio
    ```
 
 2. **Install dependencies**
