@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import ProfileCard from "./components/ProfileCard";
 import TerminalHeader from "./components/header";
 import TerminalFooter from "./components/footer";
-import Terminal from "./components/terminal"; // ✅ import
+import Terminal from "./components/terminal";
 import "./style/mainPage.css";
 
 const MainPage: React.FC = () => {

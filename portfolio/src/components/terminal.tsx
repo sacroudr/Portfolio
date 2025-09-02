@@ -29,21 +29,33 @@ const Terminal: React.FC<TerminalProps> = ({ user = "sacroud@portfolio" }) => {
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
 
   const typeText = (text: string, delay = 30, addNewLine = true): Promise<void> => {
-    return new Promise((resolve) => {
-      const chars = Array.from(text);
-      let i = 0;
-      const interval = setInterval(() => {
-        if (i < chars.length) {
-          term.current?.write(chars[i]);
-          i++;
-        } else {
-          clearInterval(interval);
-          if (addNewLine) term.current?.writeln("");
-          resolve();
-        }
-      }, delay);
-    });
-  };
+  return new Promise((resolve) => {
+    const chars = Array.from(text);
+    let written = 0;
+    const start = Date.now();
+
+    const writeFrame = () => {
+      // Combien de caractères auraient dû être affichés depuis le début
+      const elapsed = Date.now() - start;
+      const shouldHaveWritten = Math.floor(elapsed / delay);
+
+      while (written < shouldHaveWritten && written < chars.length) {
+        term.current?.write(chars[written]);
+        written++;
+      }
+
+      if (written < chars.length) {
+        requestAnimationFrame(writeFrame); // continue
+      } else {
+        if (addNewLine) term.current?.writeln("");
+        resolve();
+      }
+    };
+
+    requestAnimationFrame(writeFrame);
+  });
+};
+
 
   const prompt = useCallback(() => {
     term.current?.write(`\n\x1b[95m${user}\x1b[95m:~$ \x1b[0m`);
@@ -173,6 +185,10 @@ const Terminal: React.FC<TerminalProps> = ({ user = "sacroud@portfolio" }) => {
         fontSize: 16,
         cols: Math.floor(containerSize.width / 9), // Approximation basée sur la largeur de caractère
         rows: Math.floor(containerSize.height / 20), // Approximation basée sur la hauteur de ligne
+
+        disableStdin: false,         // garder les entrées
+        allowProposedApi: true,      // activer certaines options expérimentales
+        rightClickSelectsWord: true, // clic droit = sélection mot
       });
 
       // Ouvrir le terminal immédiatement
