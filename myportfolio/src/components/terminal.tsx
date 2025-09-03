@@ -7,6 +7,7 @@ import "../style/terminal.css";
 import { commands } from "../data/commands";
 import { findClosestCommand } from "../utils/commandHelper";
 import { WebLinksAddon } from "xterm-addon-web-links";
+import { typeText, typeTextController } from "../utils/typeText";
 
 interface TerminalProps {
   user?: string;
@@ -27,35 +28,6 @@ const Terminal: React.FC<TerminalProps> = ({ user = "sacroud@portfolio" }) => {
   
   const [isTerminalReady, setIsTerminalReady] = useState(false);
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
-
-  const typeText = (text: string, delay = 30, addNewLine = true): Promise<void> => {
-  return new Promise((resolve) => {
-    const chars = Array.from(text);
-    let written = 0;
-    const start = Date.now();
-
-    const writeFrame = () => {
-      // Combien de caractères auraient dû être affichés depuis le début
-      const elapsed = Date.now() - start;
-      const shouldHaveWritten = Math.floor(elapsed / delay);
-
-      while (written < shouldHaveWritten && written < chars.length) {
-        term.current?.write(chars[written]);
-        written++;
-      }
-
-      if (written < chars.length) {
-        requestAnimationFrame(writeFrame); // continue
-      } else {
-        if (addNewLine) term.current?.writeln("");
-        resolve();
-      }
-    };
-
-    requestAnimationFrame(writeFrame);
-  });
-};
-
 
   const prompt = useCallback(() => {
     term.current?.write(`\n\x1b[95m${user}\x1b[95m:~$ \x1b[0m`);
@@ -102,7 +74,7 @@ const Terminal: React.FC<TerminalProps> = ({ user = "sacroud@portfolio" }) => {
 
     const commandFn = commands[cmd];
     if (!commandFn) {
-      await typeText(`\x1b[91mCommand not found: ${cmd}\x1b[0m`);
+      await typeText(term,`\x1b[91mCommand not found: ${cmd}\x1b[0m`);
 
       term.current?.write("\x1b[93mFetching information from AI assistant");
       let dots = 0;
@@ -127,10 +99,11 @@ const Terminal: React.FC<TerminalProps> = ({ user = "sacroud@portfolio" }) => {
       if (suggestion) {
         const suggestedFn = commands[suggestion];
         if (suggestedFn) {
-          await suggestedFn(typeText);
+          await suggestedFn((...args) =>typeText(term,...args));
         }
       } else {
         await typeText(
+          term,
           `\x1b[91mI can only provide information about SACROUD Riad from his portfolio.\x1b[0m`
         );
       }
@@ -140,7 +113,7 @@ const Terminal: React.FC<TerminalProps> = ({ user = "sacroud@portfolio" }) => {
       return;
     }
 
-    await commandFn(typeText);
+    await commandFn((...args) => typeText(term, ...args));
     prompt();
     isExecuting.current = false;
   }, [prompt, isTerminalReady]);
@@ -236,6 +209,11 @@ const Terminal: React.FC<TerminalProps> = ({ user = "sacroud@portfolio" }) => {
     // Gestionnaire d'événements pour les données
     const onDataDisposable = term.current.onData((data) => {
       if (isExecuting.current) {
+        // Si une animation est en cours et Enter est pressé
+        if (data === "\r" && typeTextController.current?.active) {
+          typeTextController.current.active = false;
+          return; // Ne pas traiter comme une commande normale
+        }
         return;
       }
 
@@ -290,9 +268,9 @@ const Terminal: React.FC<TerminalProps> = ({ user = "sacroud@portfolio" }) => {
       if (!welcomeShown.current) {
         welcomeShown.current = true;
         isExecuting.current = true;
-        await typeText("Hi, I'm SACROUD Riad, a Software Engineer.");
-        await typeText("\nWelcome to my interactive 'AI powered' portfolio terminal!");
-        await typeText('Type "help" to see available commands.');
+        await typeText(term,"Hi, I'm SACROUD Riad, a Software Engineer.");
+        await typeText(term,"\nWelcome to my interactive portfolio terminal!");
+        await typeText(term,'Type "help" to see available commands.');
         prompt();
         isExecuting.current = false;
       }

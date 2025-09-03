@@ -1,5 +1,4 @@
 // utils/commandHelper.ts
-
 // Liste de tes commandes valides
 export const availableCommands = [
   "help",
